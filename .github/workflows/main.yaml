@@ -1,0 +1,42 @@
+name: Haskell CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-haskell@v1
+        with:
+          ghc-version: '9.10.3'
+          stack-version: '3.7.1'
+      
+      - uses: actions/cache@v4
+        name: Cache Stack build
+        with:
+          path: |
+            ~/.stack
+            .stack-work
+          key: ${{ runner.os }}-${{ hashFiles('stack.yaml') }}
+
+      - name: Install Hlint
+        run: stack install hlint
+        
+      - name: Run Hlint
+        run: ~/.local/bin/hlint .
+      
+      - name: Build Project
+        run: stack build
+        
+      - name: Run Tests
+        run: stack test

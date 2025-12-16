@@ -1,0 +1,25 @@
+name: lab4
+version: 1.0
+
+dependencies:
+  - base >= 4.7 && < 5
+
+ghc-options:
+  - -Wall
+  - -Werror
+  - -O2
+
+library:
+  source-dirs: src
+  exposed_modules:
+   - Linreg
+
+tests:
+  lab1-test-suite:
+    main: spec.hs
+    source-dirs: test
+    dependencies:
+      - base
+      - hspec
+      - lab4
+      - QuickCheck
