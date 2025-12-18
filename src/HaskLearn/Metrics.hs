@@ -1,15 +1,15 @@
 module HaskLearn.Metrics where
 
-meanAbsoluteError :: [Double] -> [Double] -> Double
-meanAbsoluteError yTrue yPred = 
+mae :: [Double] -> [Double] -> Double
+mae yTrue yPred = 
     sum (zipWith (\yt yp -> abs (yt - yp)) yTrue yPred) / fromIntegral (length yTrue)
 
-meanSquaredError :: [Double] -> [Double] -> Double
-meanSquaredError yTrue yPred = 
+mse :: [Double] -> [Double] -> Double
+mse yTrue yPred = 
     sum (zipWith (\yt yp -> (yt - yp) ^ (2 :: Int)) yTrue yPred) / fromIntegral (length yTrue)
 
 rmse :: [Double] -> [Double] -> Double
-rmse yTrue yPred = sqrt (meanSquaredError yTrue yPred)
+rmse yTrue yPred = sqrt (mse yTrue yPred)
 
 r2Score :: [Double] -> [Double] -> Double
 r2Score yTrue yPred = 

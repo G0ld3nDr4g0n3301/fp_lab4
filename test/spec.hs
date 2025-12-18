@@ -1,6 +1,4 @@
 import Test.Hspec
-import Test.QuickCheck
-import Linreg 
 
 
 main :: IO ()

@@ -4,8 +4,8 @@ import System.Random (RandomGen, randoms)
 import Data.List (sortBy)
 import Data.Ord (comparing)
 
-trainTetstSplit :: (RandomGen g) => g -> [a] -> [b] -> Double -> ([a], [a], [b], [b])
-trainTetstSplit gen x y testSize 
+trainTestSplit :: (RandomGen g) => g -> [a] -> [b] -> Double -> ([a], [a], [b], [b])
+trainTestSplit gen x y testSize 
     | length x /= length y = error "Features and target must have the same number of samples"
     | otherwise = 
         let 

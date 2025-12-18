@@ -13,7 +13,15 @@ ghc-options:
 library:
   source-dirs: src
   exposed_modules:
-   - Linreg
+   - HaskLearn.Models.Linreg
+   - HaskLearn.Main
+
+executables:
+  lab4-elf:
+    main: HaskLearn.Main
+    source-dirs: src
+    dependencies:
+      - lab4
 
 tests:
   lab1-test-suite:
