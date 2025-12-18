@@ -39,9 +39,9 @@ main = do
   
   let seed = 42
 
-  let maxDepth = 99
+  let maxDepth = 20
 
-  let minSamples = 5
+  let minSamples = 10
   
   -- Чтение данных из stdin
   (allFeatures, allTargets) <- readSSVFromStdin
@@ -62,11 +62,18 @@ main = do
       putStrLn $ "Тестовая выборка: " ++ show (length testX) ++ " примеров"
       
       -- Обучение модели
-      let model = fit False trainX trainY maxDepth minSamples
+      let model = fit True trainX trainY maxDepth minSamples
       
+      -- После обучения модели
+      let depth = getDepth model
+          leaves = getNLeaves model
+      putStrLn $ "Глубина дерева: " ++ show depth
+      putStrLn $ "Количество листьев: " ++ show leaves
+
       -- Предсказания
       let testPredictions = predict model testX
       
+      {-
       -- Метрики
       let (tp, tn, fp, fn) = getConfusionMatrix 1 testY testPredictions
           accuracy = accuracyScore testY testPredictions
@@ -83,8 +90,8 @@ main = do
       putStrLn $ "  precision:   " ++ show precision
       putStrLn $ "  recall:   " ++ show recall
       putStrLn $ "  f1:   " ++ show f1
+      -}
 
-      {-
       -- Метрики
       let testMAE = mae testY testPredictions
           testMSE = mse testY testPredictions
@@ -95,4 +102,3 @@ main = do
       putStrLn $ "  MSE (test):  " ++ show testMSE
       putStrLn $ "  R2 (test):   " ++ show testR2
       putStrLn $ "  MAE (test):  " ++ show testMAE
-      -}
