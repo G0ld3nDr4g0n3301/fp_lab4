@@ -2,7 +2,7 @@
 
 module HaskLearn.Main where
 
-import HaskLearn.Models.Linreg
+import HaskLearn.Models.Logreg
 import HaskLearn.Preprocessing
 import HaskLearn.Metrics
 import System.Random (mkStdGen)
@@ -53,8 +53,10 @@ main = do
     then putStrLn "Ошибка: нет данных"
     else do
       -- Разделение данных
-      let (trainX, testX, trainY, testY) = trainTestSplit (mkStdGen seed) allFeatures allTargets splitRatio
+      let (trainX, testX, trainYDouble, testYDouble) = trainTestSplit (mkStdGen seed) allFeatures allTargets splitRatio
       
+      let trainY = map round trainYDouble
+      let testY = map round testYDouble
       putStrLn $ "Данные: " ++ show nSamples ++ " строк, " ++ show nFeatures ++ " признаков"
       putStrLn $ "Обучающая выборка: " ++ show (length trainX) ++ " примеров"
       putStrLn $ "Тестовая выборка: " ++ show (length testX) ++ " примеров"
@@ -67,6 +69,24 @@ main = do
       let testPredictions = predict model testX
       
       -- Метрики
+      let (tp, tn, fp, fn) = getConfusionMatrix 1 testY testPredictions
+          accuracy = accuracyScore testY testPredictions
+          precision = precisionScore 1 testY testPredictions
+          recall = recallScore 1 testY testPredictions
+          f1 = f1Score 1 testY testPredictions
+
+      -- Вывод Пезультатов
+      putStrLn $ "  TP:   " ++ show tp
+      putStrLn $ "  TN:   " ++ show tn
+      putStrLn $ "  FP:   " ++ show fp
+      putStrLn $ "  FN:   " ++ show fn
+      putStrLn $ "  accuracy:   " ++ show accuracy
+      putStrLn $ "  precision:   " ++ show precision
+      putStrLn $ "  recall:   " ++ show recall
+      putStrLn $ "  f1:   " ++ show f1
+
+      {-
+      -- Метрики
       let testMAE = mae testY testPredictions
           testMSE = mse testY testPredictions
           testR2 = r2Score testY testPredictions
@@ -76,3 +96,4 @@ main = do
       putStrLn $ "  MSE (test):  " ++ show testMSE
       putStrLn $ "  R2 (test):   " ++ show testR2
       putStrLn $ "  MAE (test):  " ++ show testMAE
+      -}
