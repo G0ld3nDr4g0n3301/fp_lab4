@@ -2,7 +2,7 @@
 
 module HaskLearn.Main where
 
-import HaskLearn.Models.Logreg
+import HaskLearn.Models.Tree
 import HaskLearn.Preprocessing
 import HaskLearn.Metrics
 import System.Random (mkStdGen)
@@ -36,12 +36,12 @@ main :: IO ()
 main = do
   
   let splitRatio = 0.2
-      
-  let learningRate = 0.01
-      
-  let iterations = 10000
-      
+  
   let seed = 42
+
+  let maxDepth = 99
+
+  let minSamples = 5
   
   -- Чтение данных из stdin
   (allFeatures, allTargets) <- readSSVFromStdin
@@ -55,15 +55,14 @@ main = do
       -- Разделение данных
       let (trainX, testX, trainYDouble, testYDouble) = trainTestSplit (mkStdGen seed) allFeatures allTargets splitRatio
       
-      let trainY = map round trainYDouble
-      let testY = map round testYDouble
+      let trainY = trainYDouble
+      let testY = testYDouble
       putStrLn $ "Данные: " ++ show nSamples ++ " строк, " ++ show nFeatures ++ " признаков"
       putStrLn $ "Обучающая выборка: " ++ show (length trainX) ++ " примеров"
       putStrLn $ "Тестовая выборка: " ++ show (length testX) ++ " примеров"
       
       -- Обучение модели
-      let g = mkStdGen seed
-          (model, _) = fit trainX trainY learningRate iterations g
+      let model = fit False trainX trainY maxDepth minSamples
       
       -- Предсказания
       let testPredictions = predict model testX
