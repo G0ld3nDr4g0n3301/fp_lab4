@@ -39,7 +39,7 @@ main = do
       
   let learningRate = 0.01
       
-  let iterations = 5000
+  let iterations = 10000
       
   let seed = 42
   
@@ -64,19 +64,15 @@ main = do
           (model, _) = fit trainX trainY learningRate iterations g
       
       -- Предсказания
-      let trainPredictions = predict model trainX
-          testPredictions = predict model testX
+      let testPredictions = predict model testX
       
       -- Метрики
-      let trainMSE = mse trainY trainPredictions
+      let testMAE = mae testY testPredictions
           testMSE = mse testY testPredictions
-          trainR2 = r2Score trainY trainPredictions
           testR2 = r2Score testY testPredictions
       
       -- Вывод результатов
       putStrLn "\nМетрики:"
-      putStrLn $ "  MSE (train): " ++ show trainMSE
       putStrLn $ "  MSE (test):  " ++ show testMSE
-      putStrLn $ "  R2 (train):  " ++ show trainR2
       putStrLn $ "  R2 (test):   " ++ show testR2
-      
+      putStrLn $ "  MAE (test):  " ++ show testMAE
