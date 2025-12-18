@@ -1,6 +1,6 @@
 module HaskLearn.Preprocessing where
 
-import System.Random (StdGen, randoms)
+import System.Random (RandomGen, randoms)
 import Data.List (sortBy)
 import Data.Ord (comparing)
 
@@ -12,7 +12,7 @@ trainTetstSplit gen x y testSize
             dataset = zip x y 
             n = length dataset
             nTest = floor $ fromIntegral n * testSize
-            rs = random gen :: [Int]
+            rs = randoms gen :: [Int]
             shuffled = map snd $ sortBy (comparing fst) $ zip rs dataset
             (testSet, trainSet) = splitAt nTest shuffled
 

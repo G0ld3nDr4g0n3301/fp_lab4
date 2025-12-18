@@ -6,4 +6,4 @@ meanAbsoluteError yTrue yPred =
 
 meanSquaredError :: [Double] -> [Double] -> Double
 meanSquaredError yTrue yPred = 
-    sum (zipWith (\yt yp -> (yt - yp) ^ 2) yTrue yPred) / fromIntegral (length yTrue)
+    sum (zipWith (\yt yp -> (yt - yp) ^ (2 :: Int)) yTrue yPred) / fromIntegral (length yTrue)
