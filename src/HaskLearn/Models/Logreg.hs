@@ -1,0 +1,1 @@
+module HaskLearn.Models.Logreg where

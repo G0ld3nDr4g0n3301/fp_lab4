@@ -3,3 +3,4 @@ build
 .stack-work
 stack.yaml.lock
 lab4.cabal
+tmp_python
