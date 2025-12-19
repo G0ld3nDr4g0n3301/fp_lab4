@@ -28,8 +28,8 @@ spec = do
             (trainX, testX, trainY, testY) = trainTestSplit gen xs' ys' testRatio
          in n
               > 0
-              ==> (length trainX + length testX == n)
-                && (length trainY + length testY == n)
+                ==> (length trainX + length testX == n)
+              && (length trainY + length testY == n)
 
     it "процент тестовой выборки должен соответствовать переданному testSize" $ do
       let xs = replicate 100 [1.0 :: Double]
