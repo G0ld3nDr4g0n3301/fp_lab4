@@ -1,4 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
 {-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
 module HaskLearn.Models.KNN 
@@ -97,8 +96,8 @@ findKNearest k root target = take k $ search root []
 
 
 predict :: KNNModel -> [[Double]] -> [Double]
-predict (KNNModel tree k w mode) testX =
-    map (processOne . VU.fromList) testX
+predict (KNNModel tree k w mode) =
+    map (processOne . VU.fromList)
   where
     processOne query =
         let nearest = findKNearest k tree query
