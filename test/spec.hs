@@ -2,15 +2,15 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 {-# OPTIONS_GHC -Wno-unused-imports #-}
 
-import Test.Hspec
-import Test.QuickCheck
-import System.Random (mkStdGen)
 import HaskLearn.Metrics
-import HaskLearn.Preprocessing
 import qualified HaskLearn.Models.KNN as KNN
 import qualified HaskLearn.Models.Linreg as Linreg
 import qualified HaskLearn.Models.Logreg as Logreg
 import qualified HaskLearn.Models.Tree as Tree
+import HaskLearn.Preprocessing
+import System.Random (mkStdGen)
+import Test.Hspec
+import Test.QuickCheck
 
 main :: IO ()
 main = hspec spec
@@ -19,16 +19,16 @@ spec :: Spec
 spec = do
   describe "HaskLearn.Preprocessing.trainTestSplit" $ do
     it "сумма размеров выборок должна быть равна исходному размеру" $
-      property $ \xs ys -> 
+      property $ \xs ys ->
         let n = min (length (xs :: [Int])) (length (ys :: [Int]))
             xs' = take n xs
             ys' = take n ys
             testRatio = 0.2 :: Double
             gen = mkStdGen 42
             (trainX, testX, trainY, testY) = trainTestSplit gen xs' ys' testRatio
-        in n > 0 ==> 
-           (length trainX + length testX == n) && 
-           (length trainY + length testY == n)
+         in n > 0 ==>
+              (length trainX + length testX == n)
+                && (length trainY + length testY == n)
 
     it "процент тестовой выборки должен соответствовать переданному testSize" $ do
       let xs = replicate 100 [1.0 :: Double]
@@ -50,15 +50,15 @@ spec = do
       mse yTrue yNoise `shouldSatisfy` (> (0.0 :: Double))
 
     it "MAE свойство - mae [a] [b] == mae [b] [a]" $
-      property $ \xs ys -> 
+      property $ \xs ys ->
         let len = min (length xs) (length ys)
             y1 = take len (map abs xs) :: [Double]
             y2 = take len (map abs ys) :: [Double]
-        in not (null y1) ==> mae y1 y2 `shouldBe` mae y2 y1
+         in not (null y1) ==> mae y1 y2 `shouldBe` mae y2 y1
 
   describe "HaskLearn.Metrics (классификация)" $ do
     let labelsTrue = [1, 1, 0, 0] :: [Int]
-    let labelsPred = [1, 0, 0, 1] :: [Int] 
+    let labelsPred = [1, 0, 0, 1] :: [Int]
 
     it "правильно считает Accuracy" $
       accuracyScore labelsTrue labelsPred `shouldBe` (0.5 :: Double)
@@ -70,7 +70,7 @@ spec = do
       precisionScore (1 :: Int) labelsTrue labelsPred `shouldBe` (0.5 :: Double)
 
     it "F1 Score должен быть корректным для идеального совпадения" $
-      f1Score (1 :: Int) ([1,0] :: [Int]) ([1,0] :: [Int]) `shouldBe` (1.0 :: Double)
+      f1Score (1 :: Int) ([1, 0] :: [Int]) ([1, 0] :: [Int]) `shouldBe` (1.0 :: Double)
 
     it "F1 Score свойство - всегда в диапазоне [0, 1]" $
       property $ \ys1 ys2 ->
@@ -78,8 +78,8 @@ spec = do
             y1 = take len (ys1 :: [Int])
             y2 = take len (ys2 :: [Int])
             res = f1Score (1 :: Int) y1 y2
-        in not (null y1) ==> res >= (0.0 :: Double) && res <= (1.0 :: Double)
-    
+         in not (null y1) ==> res >= (0.0 :: Double) && res <= (1.0 :: Double)
+
   describe "HaskLearn.Models.KNN" $ do
     it "предсказывает ту же точку с k=1" $ do
       let trainX = [[1.0, 2.0], [5.0, 6.0], [10.0, 10.0]] :: [[Double]]
@@ -95,8 +95,8 @@ spec = do
           (model, _) = Linreg.fit trainX trainY 0.01 100 (mkStdGen 42)
           preds = Linreg.predict model [[4.0]]
       case preds of
-        (p:_) -> p `shouldSatisfy` (\val -> abs (val - 8.0) < 0.5)
-        []    -> expectationFailure "Linreg no output"
+        (p : _) -> p `shouldSatisfy` (\val -> abs (val - 8.0) < 0.5)
+        [] -> expectationFailure "Linreg no output"
 
   describe "HaskLearn.Models.Logreg" $ do
     it "разделяет классы (бинарно)" $ do
@@ -105,8 +105,8 @@ spec = do
           (model, _) = Logreg.fit trainX trainY 0.1 100 (mkStdGen 42)
           preds = Logreg.predict model [[1.5, 1.5]]
       case preds of
-        (p:_) -> p `shouldBe` (0 :: Int)
-        []    -> expectationFailure "Logreg no output"
+        (p : _) -> p `shouldBe` (0 :: Int)
+        [] -> expectationFailure "Logreg no output"
 
   describe "HaskLearn.Models.Tree" $ do
     it "smoke test, т.е возвращает предсказания" $ do
@@ -115,5 +115,5 @@ spec = do
           model = Tree.fit True trainX trainY 5 2
           preds = Tree.predict model [[1.5]]
       case preds of
-        (p:_) -> p `shouldSatisfy` (> (0.0 :: Double))
-        []    -> expectationFailure "Tree no output"
+        (p : _) -> p `shouldSatisfy` (> (0.0 :: Double))
+        [] -> expectationFailure "Tree no output"
