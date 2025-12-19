@@ -26,8 +26,9 @@ spec = do
             testRatio = 0.2 :: Double
             gen = mkStdGen 42
             (trainX, testX, trainY, testY) = trainTestSplit gen xs' ys' testRatio
-         in n > 0 ==>
-              (length trainX + length testX == n)
+         in n
+              > 0
+              ==> (length trainX + length testX == n)
                 && (length trainY + length testY == n)
 
     it "процент тестовой выборки должен соответствовать переданному testSize" $ do
