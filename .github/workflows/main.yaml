@@ -29,11 +29,23 @@ jobs:
             .stack-work
           key: ${{ runner.os }}-${{ hashFiles('stack.yaml') }}
 
+      - name: Install Ormolu
+        run: |
+          wget -q https://github.com/tweag/ormolu/releases/download/0.7.3.0/ormolu-Linux.zip
+          unzip ormolu-Linux.zip
+          chmod +x ormolu
+          sudo mv ormolu /usr/local/bin/
+      
+      - name: Check formatting with ormolu
+        run: find src test -type f -name "*.hs" -exec ormolu --mode check {} +
+        
+
       - name: Install Hlint
         run: stack install hlint
         
       - name: Run Hlint
         run: ~/.local/bin/hlint .
+      
       
       - name: Build Project
         run: stack build
